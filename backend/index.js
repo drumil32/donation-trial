@@ -9,13 +9,23 @@ import cors from "cors";
 
 
 const app = express();
-app.use(cors({ origin: process.env.FRONTEND_BASE_URL, credentials: true }));
+app.use(cors({
+    origin: process.env.FRONTEND_BASE_URL, // Frontend domain
+    credentials: true, // Allow cookies to be sent with requests
+}));
+
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true, // Ensures the cookie is only accessible via HTTP(S)
+        secure: true, // Cookie is only sent over HTTPS
+        sameSite: 'none', // Allows cookies in cross-origin requests
+    }
 }));
+
 
 app.use(passport.initialize());
 app.use(passport.session());
