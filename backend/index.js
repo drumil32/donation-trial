@@ -14,7 +14,6 @@ app.use(cors({
     credentials: true, // Allow cookies to be sent with requests
 }));
 
-
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -23,12 +22,17 @@ app.use(session({
         httpOnly: true, // Ensures the cookie is only accessible via HTTP(S)
         secure: true, // Cookie is only sent over HTTPS
         sameSite: 'none', // Allows cookies in cross-origin requests
+        domain: process.env.DOMAIN
     }
 }));
 
-
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use((req,res,next)=>{
+    console.log(req.user);
+    next();
+})
 
 passport.use(
     new GoogleStrategy({
