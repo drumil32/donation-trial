@@ -23,12 +23,12 @@ app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        httpOnly: true, // The cookie is not accessible by JavaScript
-        secure: true, // Ensure the cookie is only sent over HTTPS
-        sameSite: 'None', // Necessary for cross-origin cookies
-        domain: '.onrender.com' // Set the domain to your backend's domain (use `.onrender.com` for all subdomains)
-    }
+    // cookie: {
+    //     httpOnly: true, // The cookie is not accessible by JavaScript
+    //     secure: true, // Ensure the cookie is only sent over HTTPS
+    //     sameSite: 'None', // Necessary for cross-origin cookies
+    //     // domain: '.onrender.com' // Set the domain to your backend's domain (use `.onrender.com` for all subdomains)
+    // }
 }));
 
 app.use(passport.initialize());
@@ -61,13 +61,13 @@ app.get("/api", (req, res) => {
 app.get("/api/auth/google", passport.authenticate("google", { scope: ['profile', 'email'], prompt: "select_account" }));
 
 app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
-    res.cookie('connect.sid', req.sessionID, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'None',
-        domain: '.onrender.com' // Match your backend's domain or a parent domain if needed
-    });
-    res.redirect(process.env.FRONTEND_BASE_URL);
+    // res.cookie('connect.sid', req.sessionID, {
+    //     httpOnly: true,
+    //     secure: true,
+    //     // sameSite: 'None',
+    //     // domain: '.onrender.com' // Match your backend's domain or a parent domain if needed
+    // });
+    res.redirect('/');
 });
 
 app.get("/api/profile", (req, res) => {
@@ -80,7 +80,7 @@ app.get("/api/logout", (req, res, next) => {
         req.session.destroy((err) => {
             if (err) return next(err); // Handle session destruction errors
             res.clearCookie("connect.sid"); // Clear the session cookie (default name in Express)
-            return res.redirect(process.env.FRONTEND_BASE_URL);
+            return res.redirect('/');
         });
     });
 });
