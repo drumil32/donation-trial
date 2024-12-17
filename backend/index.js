@@ -93,11 +93,11 @@ app.get("/api/auth/status", (req, res) => {
     }
 });
 
-app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+app.use(express.static(path.join(__dirname,  'dist')));
 
 // Fallback to index.html for all other routes (useful for React Router)
 app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
+    res.sendFile(path.join(__dirname,  'dist', 'index.html'));
 });
 
 app.listen(process.env.PORT, () => {
