@@ -6,7 +6,12 @@ import session from "express-session";
 import passport from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import cors from "cors";
+import { fileURLToPath } from 'url';
+import path from "path";
 
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors({
@@ -29,7 +34,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
     console.log(req.user);
     next();
 })
@@ -49,13 +54,13 @@ passport.use(
 passport.serializeUser((user, done) => done(null, user));
 passport.deserializeUser((user, done) => done(null, user));
 
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("<a href='/auth/google'>Login with Google</a>");
 });
 
-app.get("/auth/google", passport.authenticate("google", { scope: ['profile', 'email'], prompt: "select_account" }));
+app.get("/api/auth/google", passport.authenticate("google", { scope: ['profile', 'email'], prompt: "select_account" }));
 
-app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
     res.cookie('connect.sid', req.sessionID, {
         httpOnly: true,
         secure: true,
@@ -65,11 +70,11 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
     res.redirect(process.env.FRONTEND_BASE_URL);
 });
 
-app.get("/profile", (req, res) => {
+app.get("/api/profile", (req, res) => {
     res.send("Welcome to the profile page : " + req.user.displayName);
 });
 
-app.get("/logout", (req, res, next) => {
+app.get("/api/logout", (req, res, next) => {
     req.logout((err) => {
         if (err) return next(err); // Handle any logout errors
         req.session.destroy((err) => {
@@ -80,12 +85,19 @@ app.get("/logout", (req, res, next) => {
     });
 });
 
-app.get("/auth/status", (req, res) => {
+app.get("/api/auth/status", (req, res) => {
     if (req.isAuthenticated()) {
         res.json({ loggedIn: true, user: req.user });
     } else {
         res.json({ loggedIn: false });
     }
+});
+
+app.use(express.static(path.join(__dirname, '..', 'frontend', 'dist')));
+
+// Fallback to index.html for all other routes (useful for React Router)
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', 'frontend', 'dist', 'index.html'));
 });
 
 app.listen(process.env.PORT, () => {
