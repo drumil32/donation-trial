@@ -19,10 +19,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        httpOnly: true, // Ensures the cookie is only accessible via HTTP(S)
-        secure: true, // Cookie is only sent over HTTPS
-        sameSite: 'none', // Allows cookies in cross-origin requests
-        domain: process.env.DOMAIN
+        httpOnly: true, // The cookie is not accessible by JavaScript
+        secure: true, // Ensure the cookie is only sent over HTTPS
+        sameSite: 'None', // Necessary for cross-origin cookies
+        domain: '.onrender.com' // Set the domain to your backend's domain (use `.onrender.com` for all subdomains)
     }
 }));
 
@@ -56,6 +56,12 @@ app.get("/", (req, res) => {
 app.get("/auth/google", passport.authenticate("google", { scope: ['profile', 'email'], prompt: "select_account" }));
 
 app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+    res.cookie('connect.sid', req.sessionID, {
+        httpOnly: true,
+        secure: true,
+        sameSite: 'None',
+        domain: '.onrender.com' // Match your backend's domain or a parent domain if needed
+    });
     res.redirect(process.env.FRONTEND_BASE_URL);
 });
 
