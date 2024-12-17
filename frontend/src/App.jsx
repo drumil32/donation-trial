@@ -8,7 +8,7 @@ function App() {
   useEffect(() => {
     // Check login status
     axios
-      .get(`${import.meta.env.VITE_BACKEND_BASE_URL}/auth/status`, { withCredentials: true })
+      .get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/status`, { withCredentials: true })
       .then((res) => {
         setIsLoggedIn(res.data.loggedIn);
         if (res.data.loggedIn) {
@@ -26,12 +26,12 @@ function App() {
       {isLoggedIn ? (
         <div>
           <h2>Welcome, {user.displayName}!</h2>
-          <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/logout'}>Logout</a>
+          <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/api/logout'}>Logout</a>
         </div>
       ) : (
         <div>
           <h2>You are not logged in</h2>
-          <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/auth/google'}>
+          <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/api/auth/google'}>
             <button>Login with Google</button>
           </a>
         </div>
