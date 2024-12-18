@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from 'js-cookie';
+import { GoogleLogin } from "@react-oauth/google";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -27,21 +28,34 @@ function App() {
   }, []);
 
   return (
+    // <div>
+    //   <h1>Google OAuth Status</h1>
+    //   {isLoggedIn ? (
+    //     <div>
+    //       <h2>Welcome, {user.displayName}!</h2>
+    //       <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/api/logout'}>Logout</a>
+    //     </div>
+    //   ) : (
+    //     <div>
+    //       <h2>You are not logged in</h2>
+    //       <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/api/auth/google'}>
+    //         <button>Login with Google</button>
+    //       </a>
+    //     </div>
+    //   )}
+    // </div>
     <div>
-      <h1>Google OAuth Status</h1>
-      {isLoggedIn ? (
-        <div>
-          <h2>Welcome, {user.displayName}!</h2>
-          <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/api/logout'}>Logout</a>
-        </div>
-      ) : (
-        <div>
-          <h2>You are not logged in</h2>
-          <a href={import.meta.env.VITE_BACKEND_BASE_URL + '/api/auth/google'}>
-            <button>Login with Google</button>
-          </a>
-        </div>
-      )}
+      <h1>Hello World</h1>
+      <span>
+        <GoogleLogin
+          onSuccess={credentialResponse => {
+            console.log(credentialResponse);
+          }}
+          onError={() => {
+            console.log('Login Failed');
+          }}
+        />
+      </span>
     </div>
   );
 }
