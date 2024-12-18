@@ -60,7 +60,7 @@ app.get("/api", (req, res) => {
 
 app.get("/api/auth/google", passport.authenticate("google", { scope: ['profile', 'email'], prompt: "select_account" }));
 
-app.get('/api/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login' }), (req, res) => {
     // res.cookie('connect.sid', req.sessionID, {
     //     httpOnly: true,
     //     secure: true,
