@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Cookies from 'js-cookie';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [user, setUser] = useState(null);
-
+  console.log(Cookies.get('connect.sid'))
+  const str = `connect.sid=${Cookies.get('connect.sid')}`
   useEffect(() => {
     // Check login status
     axios
-      .get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/status`, { withCredentials: true })
+      .get(`${import.meta.env.VITE_BACKEND_BASE_URL}/api/auth/status`, {
+        withCredentials: true, headers: {
+          Cookie: str,
+        },
+      })
       .then((res) => {
         setIsLoggedIn(res.data.loggedIn);
         if (res.data.loggedIn) {
