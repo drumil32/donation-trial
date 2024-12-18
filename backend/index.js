@@ -67,7 +67,7 @@ app.get('/api/auth/google/callback', passport.authenticate('google', { failureRe
     //     // sameSite: 'None',
     //     // domain: '.onrender.com' // Match your backend's domain or a parent domain if needed
     // });
-    res.redirect('/');
+    res.redirect(process.env.FRONTEND_BASE_URL);
 });
 
 app.get("/api/profile", (req, res) => {
@@ -80,7 +80,7 @@ app.get("/api/logout", (req, res, next) => {
         req.session.destroy((err) => {
             if (err) return next(err); // Handle session destruction errors
             res.clearCookie("connect.sid"); // Clear the session cookie (default name in Express)
-            return res.redirect('/');
+            return res.redirect(process.env.FRONTEND_BASE_URL);
         });
     });
 });
@@ -93,12 +93,12 @@ app.get("/api/auth/status", (req, res) => {
     }
 });
 
-app.use(express.static(path.join(__dirname,  'dist')));
+// app.use(express.static(path.join(__dirname,  'dist')));
 
-// Fallback to index.html for all other routes (useful for React Router)
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname,  'dist', 'index.html'));
-});
+// // Fallback to index.html for all other routes (useful for React Router)
+// app.get('*', (req, res) => {
+//     res.sendFile(path.join(__dirname,  'dist', 'index.html'));
+// });
 
 app.listen(process.env.PORT, () => {
     console.log("Server is running on port " + process.env.PORT);
